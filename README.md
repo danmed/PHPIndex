@@ -4,9 +4,13 @@
 
 A powerful, single-file PHP script for browsing a server's file directory with a clean, modern interface. PHPIndex allows you to navigate subfolders, view file contents, and instantly generate download or execution commands for Wget, Curl, and PowerShell.
 
+## Demo
+
+https://scripts.danmed.co.uk
+
 ## Screenshots
 
-<img width="1857" height="1003" alt="image" src="https://github.com/user-attachments/assets/54d03028-2490-4246-ac96-4d8f22fa6bb7" />
+<img width="1857" height="1003" alt="image" src="https://github.com/user-attachments/assets/eecff43f-65b7-48b6-85f7-5fb34abd1253" />
 
 ## Features
 
