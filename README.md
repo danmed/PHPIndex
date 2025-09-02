@@ -11,6 +11,8 @@ https://scripts.danmed.co.uk
 ## Screenshots
 
 <img width="1857" height="1003" alt="image" src="https://github.com/user-attachments/assets/eecff43f-65b7-48b6-85f7-5fb34abd1253" />
+<img width="1875" height="1015" alt="image" src="https://github.com/user-attachments/assets/a87c5a57-3020-473f-80c3-7b92850f72b2" />
+
 
 ## Features
 
