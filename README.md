@@ -6,8 +6,7 @@ A powerful, single-file PHP script for browsing a server's file directory with a
 
 ## Screenshots
 
-<img width="1871" height="1177" alt="image" src="https://github.com/user-attachments/assets/e3ed8fb1-6492-4925-aa2a-b833af9a972a" />
-<img width="1857" height="1003" alt="image" src="https://github.com/user-attachments/assets/b7d76e1c-e82d-4726-861e-37f9bc3d8669" />
+<img width="1857" height="1003" alt="image" src="https://github.com/user-attachments/assets/54d03028-2490-4246-ac96-4d8f22fa6bb7" />
 
 ## Features
 
