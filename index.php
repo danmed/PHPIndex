@@ -58,7 +58,7 @@
             <?php
                 // --- PHP SCRIPT START ---
 
-                // Version 1.2
+                // Version 1.3
 
                 // --- CONFIGURATION ---
                 $excludeList = [
@@ -67,6 +67,7 @@
                     '.DS_Store',
                     '.git',
                 ];
+                $powershellExtensions = ['ps1', 'psm1', 'psd1'];
 
                 // --- PATH HANDLING & SECURITY ---
                 $baseDir = __DIR__;
@@ -151,6 +152,10 @@
                     $fileCount++;
                     $safeFile = htmlspecialchars($file, ENT_QUOTES, 'UTF-8');
                     $fullUrl = rtrim($fullPathUrl, '/') . '/' . rawurlencode($file);
+                    
+                    // Check if the file is a PowerShell script
+                    $fileExtension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+                    $isPowershellFile = in_array($fileExtension, $powershellExtensions);
 
                     // Wget, Curl, PowerShell Commands
                     $wgetDownloadCommand = "wget '" . $fullUrl . "'";
@@ -159,6 +164,9 @@
                     $curlExecCommand = "curl -sL '" . $fullUrl . "' | bash";
                     $psDownloadCommand = "Invoke-WebRequest -Uri '" . $fullUrl . "' -OutFile '" . $safeFile . "'";
                     $psExecCommand = "Invoke-RestMethod -Uri '" . $fullUrl . "' | Invoke-Expression";
+                    
+                    // Determine initial command to display
+                    $initialCommand = $isPowershellFile ? $psDownloadCommand : $wgetDownloadCommand;
                 ?>
                     <!-- File Entry Card -->
                     <div class="file-entry-card border border-gray-200 dark:border-gray-700 rounded-lg p-4 transition hover:bg-gray-50 dark:hover:bg-gray-700" data-filename="<?= $safeFile ?>">
@@ -170,9 +178,9 @@
                             <div class="flex flex-col sm:flex-row sm:items-center gap-2 w-full lg:w-3/4" id="command-ui-<?= $fileCount ?>">
                                 <div class="flex-shrink-0 flex items-center gap-2">
                                     <select class="tool-select p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" onchange="updateCommand(this)">
-                                        <option value="wget" selected>Wget</option>
+                                        <option value="wget" <?= !$isPowershellFile ? 'selected' : '' ?>>Wget</option>
                                         <option value="curl">Curl</option>
-                                        <option value="ps">PowerShell</option>
+                                        <option value="ps" <?= $isPowershellFile ? 'selected' : '' ?>>PowerShell</option>
                                     </select>
                                     <select class="action-select p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" onchange="updateCommand(this)">
                                         <option value="download" selected>Download</option>
@@ -183,7 +191,7 @@
                                      data-wget-download="<?= htmlspecialchars($wgetDownloadCommand) ?>" data-wget-execute="<?= htmlspecialchars($wgetExecCommand) ?>"
                                      data-curl-download="<?= htmlspecialchars($curlDownloadCommand) ?>" data-curl-execute="<?= htmlspecialchars($curlExecCommand) ?>"
                                      data-ps-download="<?= htmlspecialchars($psDownloadCommand) ?>" data-ps-execute="<?= htmlspecialchars($psExecCommand) ?>">
-                                    <pre class="bg-gray-800 dark:bg-gray-900 text-white text-sm p-2 rounded-md overflow-x-auto w-full"><code class="command-code"><?= htmlspecialchars($wgetDownloadCommand) ?></code></pre>
+                                    <pre class="bg-gray-800 dark:bg-gray-900 text-white text-sm p-2 rounded-md overflow-x-auto w-full"><code class="command-code"><?= htmlspecialchars($initialCommand) ?></code></pre>
                                     <button class="copy-button bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-3 rounded-md transition-all duration-200 flex-shrink-0" onclick="copyCommand(this)" title="Copy to clipboard">Copy</button>
                                 </div>
                             </div>
@@ -211,7 +219,7 @@
                 <div class="flex items-center justify-center gap-4">
                     <a href="https://github.com/danmed/PHPIndex" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 hover:text-blue-500 dark:hover:text-blue-400 transition">
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.168 6.839 9.492.5.092.682-.217.682-.482 0-.237-.009-.868-.014-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.031-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.03 1.595 1.03 2.688 0 3.848-2.338 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.001 10.001 0 0022 12c0-5.523-4.477-10-10-10z" clip-rule="evenodd" /></svg>
-                        PHPIndex v1.2
+                        PHPIndex v1.3
                     </a>
                 </div>
                 <p class="mt-2">Released under the MIT License.</p>
