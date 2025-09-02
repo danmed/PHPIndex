@@ -6,6 +6,8 @@
     <title>PHPIndex - File Lister</title>
     <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Prism.js CSS for Syntax Highlighting -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
     <!-- Configuration for class-based dark mode -->
     <script>
         tailwind.config = {
@@ -34,6 +36,10 @@
         details[open] > summary::before {
             transform: rotate(90deg);
         }
+        /* Ensure Prism's line numbers don't get selected */
+        .line-numbers .line-numbers-rows {
+            user-select: none;
+        }
     </style>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 font-sans">
@@ -58,7 +64,7 @@
             <?php
                 // --- PHP SCRIPT START ---
 
-                // Version 1.3
+                // Version 1.4
 
                 // --- CONFIGURATION ---
                 $excludeList = [
@@ -167,6 +173,10 @@
                     
                     // Determine initial command to display
                     $initialCommand = $isPowershellFile ? $psDownloadCommand : $wgetDownloadCommand;
+
+                    // Determine language for syntax highlighting
+                    $langMap = ['sh' => 'bash', 'js' => 'javascript', 'py' => 'python', 'md' => 'markdown'];
+                    $languageClass = isset($langMap[$fileExtension]) ? $langMap[$fileExtension] : $fileExtension;
                 ?>
                     <!-- File Entry Card -->
                     <div class="file-entry-card border border-gray-200 dark:border-gray-700 rounded-lg p-4 transition hover:bg-gray-50 dark:hover:bg-gray-700" data-filename="<?= $safeFile ?>">
@@ -198,8 +208,8 @@
                         </div>
                         <details class="mt-4">
                             <summary class="cursor-pointer text-blue-600 dark:text-blue-400 hover:underline select-none">View Content</summary>
-                            <div class="mt-2 p-4 bg-gray-50 dark:bg-gray-700 border dark:border-gray-600 rounded-md">
-                                <pre class="text-sm overflow-auto text-gray-800 dark:text-gray-200" style="max-height: 400px;"><code><?= htmlspecialchars(file_get_contents($realPath . DIRECTORY_SEPARATOR . $file)); ?></code></pre>
+                            <div class="mt-2 border dark:border-gray-600 rounded-md">
+                                <pre class="text-sm overflow-auto" style="max-height: 400px;"><code class="language-<?= $languageClass ?>"><?= htmlspecialchars(file_get_contents($realPath . DIRECTORY_SEPARATOR . $file)); ?></code></pre>
                             </div>
                         </details>
                     </div>
@@ -219,7 +229,7 @@
                 <div class="flex items-center justify-center gap-4">
                     <a href="https://github.com/danmed/PHPIndex" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 hover:text-blue-500 dark:hover:text-blue-400 transition">
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.168 6.839 9.492.5.092.682-.217.682-.482 0-.237-.009-.868-.014-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.031-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.03 1.595 1.03 2.688 0 3.848-2.338 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.001 10.001 0 0022 12c0-5.523-4.477-10-10-10z" clip-rule="evenodd" /></svg>
-                        PHPIndex v1.3
+                        PHPIndex v1.4
                     </a>
                 </div>
                 <p class="mt-2">Released under the MIT License.</p>
@@ -227,6 +237,10 @@
 
         </div>
     </div>
+
+    <!-- Prism.js for Syntax Highlighting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
 
     <script>
         /**
