@@ -27,10 +27,11 @@ PHPIndex is a single-file, zero-dependency script that provides a clean and mode
 
 1.  **Download:** Get the `PHPIndex.php` file.
 2.  **Upload:** Place the file in the directory you want to browse on your web server.
-3.  **(Optional but Recommended) Set Password:**
+3.  **(Recommended) Set Your Password:**
     - Open `PHPIndex.php` in a text editor.
-    - Find the line `$plainTextPassword = 'your_password_here';` and change the password to something secure.
-    - Upload the modified file. The script will automatically and securely hash your password on the first run.
+    - **To set/reset the password:** Find the line that starts with `$passwordHash = ` and change it to look exactly like this: `$passwordHash = '';` (the hash must be empty).
+    - Next, find the line `$plainTextPassword = 'your_password_here';` and change `'your_password_here'` to your new secure password.
+    - Save and upload the file. The script will automatically generate a new secure hash from your plain text password the first time you log in.
 
 That's it! You can now access the directory through your browser.
 
