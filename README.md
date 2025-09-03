@@ -1,56 +1,80 @@
-# PHPIndex v1.5
+# PHPIndex
 
-![Version](https://img.shields.io/badge/version-1.5-blue)
-![License](https://img.shields.io/badge/license-MIT-green)
+**Version:** 1.6  
+**License:** MIT
 
-A modern, single-file PHP script for browsing a server's file directory with an intuitive web interface. It allows you to view file contents, generate download/execution commands for `wget`, `curl`, and `PowerShell`, and includes secure, password-protected file creation.
+PHPIndex is a single-file, zero-dependency script that provides a clean and modern interface for browsing a directory on your web server. It's designed for developers who need a quick and easy way to access files, generate download/execution commands, and perform basic file management.
+
+
 
 ## Features
 
-- **Single-File Deployment:** Drop `PHPIndex.php` into any directory to get started.
-- **Subfolder Navigation:** Easily browse through nested directories.
-- **Clickable Breadcrumbs:** Always know where you are and navigate back to parent folders with ease.
-- **Live Filtering:** Instantly filter the file list using text and wildcards (`*.sh`).
-- **Multi-Tool Command Generation:** Generate one-click copy commands for:
-    - `wget`
-    - `curl`
-    - `PowerShell`
-- **Download or Execute:** Choose between commands that simply download the file or download and pipe it directly to `bash` or `Invoke-Expression`.
-- **Intelligent Defaults:** Automatically selects PowerShell for `.ps1` files.
-- **Syntax Highlighting:** File previews for code are beautifully highlighted for improved readability.
-- **Secure File Creation:** Log in to create new files directly from the UI.
-- **Authentication:** Simple, secure password protection for all write actions.
-- **Dark Mode:** A sleek dark mode that respects your system preference and can be toggled manually.
-- **Responsive Design:** Looks great on both desktop and mobile devices.
-- **Secure by Default:**
-    - Directory traversal protection.
-    - Cross-Site Scripting (XSS) protection via `htmlspecialchars`.
-    - Command injection protection via `rawurlencode`.
-    - CSRF token protection for all form submissions.
+- **Single-File Deployment:** Just drop `PHPIndex.php` into any directory.
+- **Sub-folder Navigation:** Browse through subdirectories with clickable breadcrumb navigation.
+- **Command Generation:** Instantly generate download or execution commands for `Wget`, `Curl`, and `PowerShell`.
+- **Live File Filtering:** Filter the file list in real-time with wildcard support (`*.sh`, `script*`, etc.).
+- **File Content Preview:** View the contents of any file with syntax highlighting.
+- **Dark Mode:** Includes a sleek dark mode with automatic theme detection and a manual toggle.
+- **Secure File Management (Login Protected):**
+    - Create new files.
+    - Edit existing files.
+    - Delete files.
+- **Secure by Default:** Features built-in protection against directory traversal, XSS, and CSRF attacks.
 
-## Setup & Configuration
+---
 
-1.  **Download:** Place the `PHPIndex.php` file in the root of the directory you want to make accessible.
-2.  **Set Password (Required for File Creation):**
+## Setup
+
+1.  **Download:** Get the `PHPIndex.php` file.
+2.  **Upload:** Place the file in the directory you want to browse on your web server.
+3.  **(Optional but Recommended) Set Password:**
     - Open `PHPIndex.php` in a text editor.
-    - Locate the `--- CONFIGURATION ---` section at the top.
-    - Change the value of the `$plainTextPassword` variable to your desired secure password:
-      ```php
-      $plainTextPassword = 'your_super_secret_password'; 
-      ```
-    - Upload the file. The first time the script is loaded, it will automatically generate a secure hash of your password.
-    - **For enhanced security:** After the hash is generated (you'll see it in the `$passwordHash` variable if you re-download the file or view its source), you can delete the `$plainTextPassword` line entirely.
+    - Find the line `$plainTextPassword = 'your_password_here';` and change the password to something secure.
+    - Upload the modified file. The script will automatically and securely hash your password on the first run.
 
-## Usage
+That's it! You can now access the directory through your browser.
 
-- **Browsing:** Navigate to the script's URL in your browser. Click on folders to enter them and use the breadcrumbs to go back.
-- **Filtering:** Type in the filter box to narrow down the file list.
-- **Getting Commands:** Use the dropdowns next to each file to select your tool (`Wget`, `Curl`, `PowerShell`) and action (`Download`, `Execute`), then click "Copy".
-- **Creating Files:**
-    1. Click the "Login" button at the top right and enter the password you configured.
-    2. Once logged in, a "Create New File" button will appear.
-    3. Click it to open a form where you can provide a filename and content for your new file.
+---
 
-## License
+## Troubleshooting & Usage
 
-This project is licensed under the MIT License.
+### How do I edit or delete existing files?
+
+The edit and delete functions require you to be logged in. If you have not set a password, these features will not be available.
+
+If you are logged in but still can't edit or delete a file that you uploaded via FTP/SSH, it is almost certainly a **file permissions** issue.
+
+The web server runs as a specific user (e.g., `www-data` or `apache`), and that user needs permission to modify files owned by your FTP/SSH user.
+
+#### Quick Fix (Recommended)
+
+The easiest solution is to change the "owner" of the project files to the web server user.
+
+1.  **Find your web server's user:** This is commonly `www-data` on Debian/Ubuntu systems or `apache` on CentOS/RHEL systems.
+2.  **Connect to your server via SSH.**
+3.  **Run the `chown` (change owner) command:**
+    - Navigate to the parent directory of where you placed `PHPIndex.php`.
+    - Run the following command, replacing `www-data:www-data` if your server user is different and `/path/to/your/project` with the correct directory path.
+
+    ```bash
+    sudo chown -R www-data:www-data /path/to/your/project
+    ```
+    The `-R` flag makes the change recursive, applying it to all files and folders inside.
+
+#### Alternative Fix (If you can't change ownership)
+
+If you must keep the files owned by your personal user, you can grant "group" write permissions instead.
+
+1.  **Find the web server's group name** (usually the same as the user, e.g., `www-data`).
+2.  **Add your user to the web server's group:**
+
+    ```bash
+    sudo usermod -a -G www-data your_username
+    ```
+    You will need to log out and log back in for this change to take effect.
+3.  **Grant write permissions to the group** for your project directory:
+    ```bash
+    sudo chmod -R g+w /path/to/your/project
+    ```
+
+After applying either of these fixes, the edit and delete functions in PHPIndex should work as expected.
