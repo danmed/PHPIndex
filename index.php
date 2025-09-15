@@ -310,7 +310,7 @@ if ($isLoggedIn && isset($_GET['fetch_content']) && isset($_GET['file'])) {
                          <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                             <div class="font-mono text-gray-700 dark:text-gray-300 break-all lg:w-1/4">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-2 text-gray-400 dark:text-gray-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd" /></svg>
-                                <?= $safeFile ?>
+                                <a href="<?= $fullUrl ?>"><?= $safeFile ?></a>
                             </div>
                             <div class="flex flex-col sm:flex-row sm:items-center gap-2 w-full lg:w-3/4" id="command-ui-<?= $fileCount ?>">
                                 <div class="flex-shrink-0 flex items-center gap-2">
